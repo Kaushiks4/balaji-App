@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     EditText username,password;
     Button signin;
     DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,11 +32,13 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         signin.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         int flag = 0;
                         for(DataSnapshot names: dataSnapshot.getChildren()) {
                             String name = names.child("username").getValue().toString();
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
                                 String pwd = names.child("password").getValue().toString();
                                 if (pwd.equals(password.getText().toString().trim())) {
                                     flag = 1;
-                                    Toast.makeText(getApplicationContext(), "Login Succesfull", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Login Successfull", Toast.LENGTH_SHORT).show();
                                     Intent i = new Intent(MainActivity.this, HomeActivity.class);
                                     i.putExtra("Name", name);
                                     startActivity(i);

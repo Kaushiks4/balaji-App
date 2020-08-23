@@ -70,8 +70,10 @@ public class UploadActivity extends AppCompatActivity {
         session = (TextView) findViewById(R.id.textView2);
         session.setText(s);
         k = 0;
+
         data = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance().getReference();
+
         vehicleNumber = (EditText) findViewById(R.id.vehiclenumber);
         description = (EditText) findViewById(R.id.description);
         mechanic = (Spinner) findViewById(R.id.spinner);
@@ -82,20 +84,18 @@ public class UploadActivity extends AppCompatActivity {
         mPhoto = (ImageView) findViewById(R.id.imageView2);
         mPhoto.setVisibility(View.GONE);
         oldPhoto = (Button) findViewById(R.id.button8);
-        oldPhoto.setVisibility(View.GONE);
         newPhoto = (Button) findViewById(R.id.button7);
-        newPhoto.setVisibility(View.GONE);
         submit2 = (Button) findViewById(R.id.button9);
         submit2.setVisibility(View.GONE);
         sparePhoto = (ImageView) findViewById(R.id.imageView3);
         sparePhoto.setVisibility(View.GONE);
+        driverName = (EditText) findViewById(R.id.editTextTextPersonName);
         submit = (Button) findViewById(R.id.button6);
         submit.setVisibility(View.GONE);
-        driverName = (EditText) findViewById(R.id.editTextTextPersonName);
-        oldPhoto.setVisibility(View.VISIBLE);
-        newPhoto.setVisibility(View.VISIBLE);
+
         oimg = "";
         nimg = "";
+
         Date t = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm:ss");
         time = simpleDateFormat.format(t);
@@ -134,6 +134,7 @@ public class UploadActivity extends AppCompatActivity {
 
             }
         });
+
         vimgs = new ArrayList<>();
         vehicle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,6 +177,7 @@ public class UploadActivity extends AppCompatActivity {
                 }
             }
         });
+
         newPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,6 +198,7 @@ public class UploadActivity extends AppCompatActivity {
                 }
             }
         });
+
         mech.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,12 +219,14 @@ public class UploadActivity extends AppCompatActivity {
                 }
             }
         });
+
         submit2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitForm();
             }
         });
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -390,6 +395,7 @@ public class UploadActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"No image found",Toast.LENGTH_LONG).show();
         }
     }
+
     public void submitForm(){
         if(vehicleNumber.getText().toString().trim().isEmpty()){
             vehicleNumber.setError("Required");
@@ -412,6 +418,7 @@ public class UploadActivity extends AppCompatActivity {
             return;
         }
         if(!vehicleNumber.getText().toString().trim().isEmpty() && !description.getText().toString().trim().isEmpty() && vimgs != null && mUri != null && !driverName.getText().toString().trim().isEmpty()){
+            System.out.println(name);
             DailyDetails dailyDetails = new DailyDetails(vehicleNumber.getText().toString().trim(),description.getText().toString().trim(),mechanicName,mimg,time,name,driverName.getText().toString().trim());
             data.child("Daily").child(d).child(vehicleNumber.getText().toString().toLowerCase()).child(s).setValue(dailyDetails);
             for(int i=0;i<vimgs.size();i++){
@@ -419,10 +426,6 @@ public class UploadActivity extends AppCompatActivity {
             }
             data.child("Daily").child(d).child(vehicleNumber.getText().toString().toLowerCase()).child(s).child("Old_Photo").setValue(oimg);
             data.child("Daily").child(d).child(vehicleNumber.getText().toString().toLowerCase()).child(s).child("New_Photo").setValue(nimg);
-            MechanicDetails mechanicDetails = new MechanicDetails(vehicleNumber.getText().toString().trim(),d,description.getText().toString().trim(),time);
-            data.child("Mechanic").child(mechanicName).child(vehicleNumber.getText().toString().toLowerCase().trim()).child(d).setValue(mechanicDetails);
-            data.child("Mechanic").child(mechanicName).child(vehicleNumber.getText().toString().toLowerCase().trim()).child(d).child("vPhoto").setValue(vimgs.get(0));
-            data.child("Vehicles").child(vehicleNumber.getText().toString().toLowerCase().trim()).setValue(vehicleNumber.getText().toString().toLowerCase().trim());
             Toast.makeText(getApplicationContext(),"Uploaded Successfully",Toast.LENGTH_LONG).show();
             Intent i = new Intent(UploadActivity.this,HomeActivity.class);
             startActivity(i);
